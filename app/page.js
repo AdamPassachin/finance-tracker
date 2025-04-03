@@ -2,7 +2,6 @@ import SignInButton from '@/components/auth/SignInButton';
 
 export default function Home() {
 
-
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -23,9 +22,6 @@ export default function Home() {
 
           <div className="flex items-center gap-4">
             <SignInButton />
-            <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors">
-              Sign up
-            </button>
           </div> 
         </div>
       </nav>
