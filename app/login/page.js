@@ -1,11 +1,20 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import Image from "next/image";
-import { useState } from "react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+
+  const googleSignIn = () => {
+    signIn("google", { callbackUrl: "/" });
+  };
+
+  const resendAction = async (formData) => {
+    const email = formData.get("email");
+    await signIn("resend", { 
+      email: email,
+      callbackUrl: "/"
+    });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1C1C1C] p-4">
@@ -18,7 +27,7 @@ export default function LoginPage() {
 
         {/* Google Sign In Button */}
         <button
-          onClick={() => signIn("google", { callbackUrl: "/" })}
+          onClick={googleSignIn}
           className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[#3A3A3A] text-white rounded-xl hover:bg-[#444444] transition-colors"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -51,29 +60,33 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Email Sign In Form */}
-        <div className="space-y-6">
+        {/* Resend Magic Link Form */}
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          resendAction(formData);
+        }} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+            <label htmlFor="email-resend" className="block text-sm font-medium text-white mb-2">
               Email
             </label>
             <input
-              id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="email-resend"
+              name="email"
               className="w-full px-4 py-3 bg-[#3A3A3A] text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E87D65] placeholder-[#666666]"
               placeholder="Enter your email"
+              required
             />
           </div>
 
           <button
-            onClick={() => signIn("email", { email, callbackUrl: "/" })}
+            type="submit"
             className="w-full py-3 bg-[#E87D65] text-white rounded-xl hover:bg-[#D66D55] transition-colors"
           >
-            Sign up with email
+            Sign in with Email
           </button>
-        </div>
+        </form>
 
         <p className="mt-8 text-center text-sm text-[#666666]">
           By signing up, you agree to our{" "}
